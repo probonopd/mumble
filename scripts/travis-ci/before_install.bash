@@ -20,10 +20,11 @@ if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
 		sudo apt-get build-dep -qq mumble
 		sudo apt-get install libjack-jackd2-dev
 	elif [ "${MUMBLE_QT}" == "qt5" ] && [ "${MUMBLE_HOST}" == "x86_64-linux-gnu" ]; then
+		add-apt-repository ppa:beineri/opt-qt593-xenial -y
 		sudo apt-get -qq update
 		sudo apt-get build-dep -qq mumble
-		sudo apt-get install libqt5sql5 libqt5sql5-sqlite qt5-default qttools5-dev qttools5-dev-tools qtbase5-dev qtbase5-dev-tools qttranslations5-l10n libqt5svg5-dev
-		sudo apt-get install libjack-jackd2-dev
+		sudo apt-get install libqt5sql5 libqt5sql5-sqlite qt59base qt59tools qt59translations qt59svg libgl1-mesa-dev libjack-jackd2-dev
+		source /opt/qt*/bin/qt*-env.sh
 	elif [ "${MUMBLE_QT}" == "qt5" ] && [ "${MUMBLE_HOST}" == "i686-w64-mingw32" ]; then
 		sudo dpkg --add-architecture i386
 		sudo apt-get -qq update
