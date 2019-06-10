@@ -45,7 +45,7 @@ if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
        "qaction-to-override" : "Check for"
    }
 }
-		EOF
+EOF
 		wget -O updatedeployqt-x86_64.AppImage "https://git.io/fj4CH"
 		chmod +x ./updatedeployqt-x86_64.AppImage
 		./updatedeployqt-x86_64.AppImage $(find $HOME -type d -name 'appdir'| head -n 1)
