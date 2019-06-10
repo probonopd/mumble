@@ -29,8 +29,28 @@ if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
 		cp icons/mumble.svg appdir/usr/share/icons/scalable/apps/
 		wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
                 chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+                ./linuxdeployqt-continuous-x86_64.AppImage $(find $HOME -type d -name 'appdir'| head -n 1)/usr/share/applications/*.desktop
+		cat > updatedeployqt.json <<EOF
+{
+   // Always use AppImageUpdater for AppImages
+   "bridge" : "AppImageUpdater",
+
+   // Use this to comply with GDPR 
+   "manual-update-check" : {
+       
+       // The QObject name where 'Check for Update' has to integrated
+       "qmenu-name" : "qmHelp" ,
+
+       // Overrides any QAction with the given substring as text in the given QMenu
+       "qaction-to-override" : "Check for"
+   }
+}
+		EOF
+		wget -O updatedeployqt-x86_64.AppImage "https://git.io/fj4CH"
+		chmod +x ./updatedeployqt-x86_64.AppImage
+		./updatedeployqt-x86_64.AppImage $(find $HOME -type d -name 'appdir'| head -n 1)
                 ./linuxdeployqt-continuous-x86_64.AppImage $(find $HOME -type d -name 'appdir'| head -n 1)/usr/share/applications/*.desktop -appimage -extra-plugins=sqldrivers/libqsqlite.so
-                wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+		wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
                 bash upload.sh Mumble*.AppImage*
 	elif [ "${MUMBLE_QT}" == "qt5" ] && [ "${MUMBLE_HOST}" == "i686-w64-mingw32" ]; then
 		wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip -P ../
