@@ -13,6 +13,7 @@ if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
 		fi
 		qmake-qt4 CONFIG+="release tests g15-emulator qt4-legacy-compat ${EXTRA_CONFIG}" -recursive && make -j2 && make check
 	elif [ "${MUMBLE_QT}" == "qt5" ] && [ "${MUMBLE_HOST}" == "x86_64-linux-gnu" ]; then
+		source /opt/qt*/bin/qt*-env.sh || true
 		EXTRA_CONFIG=PREFIX=/usr
 		if [ "${MUMBLE_NO_PCH}" == "1" ]; then
 			EXTRA_CONFIG="no-pch ${EXTRA_CONFIG}"
