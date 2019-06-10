@@ -24,7 +24,7 @@ if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
 		sudo apt-get -qq update
 		sudo apt-get build-dep -qq mumble
 		sudo apt-get install libqt5sql5 libqt5sql5-sqlite qt59base qt59tools qt59translations qt59svg libgl1-mesa-dev libjack-jackd2-dev
-		source /opt/qt*/bin/qt*-env.sh
+		source /opt/qt*/bin/qt*-env.sh || true
 	elif [ "${MUMBLE_QT}" == "qt5" ] && [ "${MUMBLE_HOST}" == "i686-w64-mingw32" ]; then
 		sudo dpkg --add-architecture i386
 		sudo apt-get -qq update
