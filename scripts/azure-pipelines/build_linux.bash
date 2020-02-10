@@ -7,6 +7,9 @@
 
 ver=$(python scripts/mumble-version.py)
 
+# Use the Qt kit installed through PPA
+source /opt/qt*/bin/qt*-env.sh || true
+
 qmake -recursive CONFIG+="release tests warnings-as-errors" DEFINES+="MUMBLE_VERSION=${ver}"
 
 make -j $(nproc)
@@ -20,8 +23,29 @@ cp release/plugins/lib* appdir/usr/lib/mumble/
 cp scripts/mumble.desktop appdir/usr/share/applications/
 cp scripts/mumble.appdata.xml appdir/usr/share/metainfo/
 cp icons/mumble.svg appdir/usr/share/icons/hicolor/scalable/apps/
+
 wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
 chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+./linuxdeployqt-continuous-x86_64.AppImage $(find $HOME -type d -name 'appdir'| head -n 1)/usr/share/applications/*.desktop
+
+cat > updatedeployqt.json <<EOF
+{
+   // Always use AppImageUpdater for AppImages
+   "bridge" : "AppImageUpdater",
+   // Use this to comply with GDPR
+   "manual-update-check" : {
+       // The QObject name where 'Check for Update' has to integrated
+       "qmenu-name" : "qmHelp" ,
+       // Overrides any QAction with the given substring as text in the given QMenu
+       "qaction-to-override" : "Check for"
+   }
+}
+EOF
+
+wget -c -nv "https://github.com/antony-jr/updatedeployqt/releases/download/continuous/updatedeployqt-continuous-x86_64.AppImage"
+chmod a+x updatedeployqt-continuous-x86_64.AppImage
+./updatedeployqt-continuous-x86_64.AppImage appdir/
+
 ./linuxdeployqt-continuous-x86_64.AppImage $(find $HOME -type d -name 'appdir'| head -n 1)/usr/share/applications/*.desktop -appimage -extra-plugins=sqldrivers/libqsqlite.so
 
 for f in Mumble*.AppImage; do
